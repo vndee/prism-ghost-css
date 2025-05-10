@@ -1,4 +1,4 @@
-/* Zero left gap for code blocks */
+/* Base styling for code and pre elements */
 code[class*="language-"],
 pre[class*="language-"] {
   color: #c5c8c6;
@@ -18,36 +18,85 @@ pre[class*="language-"] {
   -moz-hyphens: none;
   -ms-hyphens: none;
   hyphens: none;
-  padding-left: 0 !important;
-  margin-left: 0 !important;
+  position: relative; /* Required for line numbers positioning */
 }
 
-/* Target the pre containers specifically */
+/* Code block container */
 pre[class*="language-"] {
-  padding: 0.5em 0.5em 0.5em 0 !important; /* Zero left padding */
   margin: 0.5em 0 !important;
+  padding: 0.5em 0.5em 0.5em 3.2em !important; /* Added padding for line numbers */
   overflow: auto;
   border-radius: 0.3em;
   background: #1d1f21;
+  counter-reset: line; /* Initialize line counter */
 }
 
-/* Target any potential container */
-pre, code, div.code-toolbar, .code-toolbar pre {
-  padding-left: 0 !important;
-  margin-left: 0 !important;
+/* Line number styling */
+pre[class*="language-"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2.5em;
+  height: 100%;
+  background: #2c2c2c; /* Slightly lighter background for line numbers */
+  border-right: 1px solid #3c3c3c;
+  z-index: 0;
+}
+
+/* Style each line */
+pre[class*="language-"] > code {
+  position: relative;
+  z-index: 1;
+}
+
+/* Add line numbers */
+pre[class*="language-"] > code > .line {
+  display: inline-block;
+  width: 100%;
+  position: relative;
+}
+
+pre[class*="language-"] > code > .line::before {
+  counter-increment: line;
+  content: counter(line);
+  position: absolute;
+  left: -3em;
+  width: 2.5em;
+  text-align: right;
+  color: #858585; /* Gray color for line numbers */
+  padding-right: 0.5em;
+  font-size: 12px;
+  user-select: none; /* Make line numbers not selectable */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+
+/* When no line elements exist, create line numbers for each line break */
+pre[class*="language-"]:not(:has(.line)) > code::before {
+  content: attr(data-line);
+  display: inline-block;
+  position: absolute;
+  left: -3em;
+  width: 2.5em;
+  text-align: right;
+  color: #858585;
+  padding-right: 0.5em;
+  font-size: 12px;
+  white-space: pre;
+  user-select: none;
+  pointer-events: none;
+  counter-reset: line;
+}
+
+/* Target any potential container - but preserve line number padding */
+div.code-toolbar, .code-toolbar pre {
   text-indent: 0 !important;
 }
 
-/* Force first line to have no indentation */
+/* Force first line to have no indentation - but preserve line number positioning */
 .token:first-child {
   margin-left: 0 !important;
-  padding-left: 0 !important;
-}
-
-/* Ensure code blocks hug the left edge */
-.code-toolbar, [class*="language-"] {
-  margin-left: 0 !important;
-  padding-left: 0 !important;
 }
 
 /* Force these styles with !important to override any conflicting styles */
@@ -57,11 +106,7 @@ pre, code, div.code-toolbar, .code-toolbar pre {
   line-height: 1.3 !important;
 }
 
-/* Ensure code blocks don't have extra indentation */
-pre, code {
-  margin-left: 0 !important;
-  text-indent: 0 !important;
-}
+/* Token styling - preserved from original */
 .token.cdata,
 .token.comment,
 .token.doctype,
