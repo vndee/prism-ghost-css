@@ -16,9 +16,11 @@ pre[class*="language-"] {
   -moz-hyphens: none;
   -ms-hyphens: none;
   hyphens: none;
+  font-size: 14px; /* Added smaller font size */
 }
 pre[class*="language-"] {
-  padding: 1em;
+  padding: 0.5em; /* Reduced padding from 1em */
+  padding-left: 0; /* Removed left indent */
   margin: 0.5em 0;
   overflow: auto;
   border-radius: 0.3em;
